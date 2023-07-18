@@ -1,5 +1,6 @@
 import React from "react";
 import "./cart.scss";
+import CartList from "./CartList";
 class CartItem extends React.Component {
   constructor(props) {
     const { id, price, desc, title, qty, imgUrl } = props.item;
@@ -13,11 +14,28 @@ class CartItem extends React.Component {
       imgUrl: imgUrl,
     };
   }
+  handleIncreaseQty = () => {
+    this.setState((prevState) => ({
+      qty: prevState.qty + 1,
+    }));
+  };
+  handleDecreaseQty = () => {
+    this.setState((prevState) => {
+      if(prevState.qty > 1)
+      return ({
+      qty: prevState.qty - 1,
+    })});
+  };
+  handleDelteQty = () => {
+    const itemId  =this.state.id;
+    console.log('deleting item' , itemId)
+    this.props.deleteItem(itemId)
+  };
   render() {
     return (
       <div className="cart-item" id={this.state.id}>
         <LeftCart imgUrl={this.state.imgUrl} />
-        <RightCart details={this.state} />
+        <RightCart details={this.state} deleteQty = {this.handleDelteQty} increaseQty = {this.handleIncreaseQty} decreaseQty = {this.handleDecreaseQty}/>
       </div>
     );
   }
@@ -30,7 +48,7 @@ function LeftCart({ imgUrl }) {
   );
 }
 function RightCart(props) {
-  const { title, desc, price, qty } = props.details;
+  const { id ,title, desc, price, qty } = props.details;
   return (
     <div className="right-item">
       <h2 className="title">{title}</h2>
@@ -38,9 +56,15 @@ function RightCart(props) {
       <div className="price">{price}</div>
       <div className="qty">{qty}</div>
       <div className="action-buttons">
-        <button className="action-button" id="inc">+</button>
-        <button className="action-button" id="dec">-</button>
-        <button className="action-button" id="delete">delte</button>
+        <button className="action-button" id="inc" onClick={props.increaseQty}>
+          +
+        </button>
+        <button className="action-button" id="dec" onClick={props.decreaseQty}>
+          -
+        </button>
+        <button className="action-button" id="delete" onClick={props.deleteQty}>
+          delte
+        </button>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
-import React from "react";
-import CartItem from "./CartItem";
+import React, { useState } from "react";
+import CartItem   from "./CartItem";
 export default function CartList() {
   let itemList = [
     {
@@ -35,10 +35,16 @@ export default function CartList() {
       imgUrl: "img/clothes.jpg",
     },
   ];
+  const [list , setList ] = useState(itemList);
+  const handleDeleteItem = (itemId) => {
+    const newList = list.filter(item => item.id != itemId);
+    setList(newList);
+
+  }
   return (
     <React.Fragment>
-      {itemList.map((item) => {
-        return <CartItem key={item.id} item={item} />;
+      {list.map((item) => {
+        return <CartItem key={item.id} item={item} deleteItem = {handleDeleteItem} />;
       })}
     </React.Fragment>
   );
